@@ -31,7 +31,7 @@ def categorize_product():
         ])
 
     if product['power_rating_range'] is not None:
-        power_rating = round(random.uniform(product['power_rating_range'][0], product['power_rating_range'][1]), 1)
+        power_rating = random.randint(product['power_rating_range'][0], product['power_rating_range'][1])
     else:
         power_rating = None
 
@@ -66,7 +66,6 @@ def generate_data():
         product_category, product_name, industries, power_rating, unit_price, pressure_rating, capacity, energy_consumption = categorize_product()
 
         product_id = i + 1000
-        power_rating = random.randint(25, 200)
         date_of_sale = fake.date_between(start_date='-1y', end_date='today')
         sales_channel = random.choice(['Direct Sales', 'Distributor', 'Online Platform'])
         sales_region = fake.random_element(elements=('East Region', 'West Region', 'South Region', 'North Region'))
