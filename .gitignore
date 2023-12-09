@@ -1,4 +1,4 @@
 # .gitignore
-/my_env/       # Ignore the entire my_env directory
+my_env/       # Ignore the entire my_env directory
 *.pyc          # Ignore compiled Python files
 __pycache__/   # Ignore Python cache directory
