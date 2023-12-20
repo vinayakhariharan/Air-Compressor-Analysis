@@ -5,24 +5,50 @@ from faker import Faker
 
 fake = Faker()
 
+def calculate_pressure(power_rating):
+    base_pressure_rating = 80 + power_rating * 2
+    variability = random.uniform(-10, 10)  # Introduce variability between -5 and 5
+    return max(80, round(base_pressure_rating + variability), round(550 + variability))
+
+def calculate_unit_price(power_rating):
+    # Example: Higher power ratings lead to higher unit prices
+    return int(8000 + power_rating * 300)  # Adjust the formula as needed
+
+def calculate_capacity(power_rating):
+    # Example: Higher power ratings lead to higher capacities, but with some variability
+    base_capacity = 30 + power_rating * 5
+    variability = random.uniform(-50, 50)  # Introduce variability between -5 and 5
+    return max(10, round(base_capacity + variability), round(500 + variability))
+
+def calculate_energy_consumption(power_rating, capacity):
+    # Example: Energy consumption is influenced by power rating and capacity, but with some randomness
+    base_consumption = 2.5 + power_rating * 0.1 + capacity * 0.02
+    randomness = random.uniform(-10, 10)  # Introduce randomness between -0.5 and 0.5
+    return round(max(1, base_consumption + randomness), 1)  # Ensure energy consumption is at least 1
+
+def calculate_energy_efficiency(power_rating, capacity, energy_consumption):
+    # Example: Introduce some randomness to the energy efficiency calculation
+    efficiency_variation = random.uniform(0.6, 1.5)  # Random multiplier between 0.8 and 1.2
+    return round((capacity / 100) / energy_consumption* efficiency_variation, 2)
+
 def categorize_product():
     product_category = random.choice(['OIL LUBRICATED SCREW AIR COMPRESSORS', 'OIL LUBRICATED PISTON AIR COMPRESSORS'])
     
     if product_category == 'OIL LUBRICATED SCREW AIR COMPRESSORS':
         product = random.choice([
-            {'name': 'ELECTRIC LUBRICATED EN SERIES SCREW AIR COMPRESSOR', 'power_rating_range': (3, 60), 'price_range': (10000, 20000), 'pressure_range': (100, 175), 'capacity_range': (10, 300), 'consumption_range': (2.5, 50)},
-            {'name': 'ELECTRIC LUBRICATED EG SERIES SCREW AIR COMPRESSOR', 'power_rating_range': (15, 100), 'price_range': (15000, 25000), 'pressure_range': (100, 200), 'capacity_range': (30, 500), 'consumption_range': (40, 75)},
-            {'name': 'ELECTRIC LUBRICATED EG SERIES SCREW AIR COMPRESSOR', 'power_rating_range': (120, 335),'price_range': (30000, 100000), 'pressure_range': (125, 250), 'capacity_range': (400, 1200), 'consumption_range': (70, 250)}
+            {'name': 'ELECTRIC LUBRICATED EN SERIES SCREW AIR COMPRESSOR', 'power_rating_range': [5, 10, 20, 30, 40, 60]},
+            {'name': 'ELECTRIC LUBRICATED EG SERIES SCREW AIR COMPRESSOR', 'power_rating_range': [15, 30, 50, 75, 90, 100]},
+            {'name': 'ELECTRIC LUBRICATED EG SERIES SCREW AIR COMPRESSOR', 'power_rating_range': [120, 150, 200, 250, 300, 335]}
         ])
         industries = random.choice([
             'Textile', 'Automotive', 'Paper', 'Food Processing', 'Small Machining', 'Fabrication Workshops'
         ])
     else:
         product = random.choice([
-            {'name': 'ALUMINIUM COAXIAL PISTON COMPRESSORS', 'power_rating_range': (1, 3), 'price_range': (8000, 12000), 'pressure_range': (90, 125),'capacity_range': (1, 15), 'consumption_range': (0.5, 3)},
-            {'name': 'LD SERIES PISTON COMPRESSOR', 'power_rating_range': (3, 10),'price_range': (12000, 15000), 'pressure_range': (90, 150),'capacity_range': (10, 20), 'consumption_range': (2.5, 7)},
-            {'name': 'HIGH PRESSURE PISTON COMPRESSORS', 'power_rating_range': (3, 20),'price_range': (10000, 20000), 'pressure_range': (90, 200),'capacity_range': (10, 30), 'consumption_range': (2.5, 8)},
-            {'name': 'CUSTOM BUILT COMPRESSORS', 'power_rating_range': (3, 250),'price_range': (10000, 150000), 'pressure_range': (90, 300),'capacity_range': (10, 1500), 'consumption_range': (2.5, 110)}  
+            {'name': 'ALUMINIUM COAXIAL PISTON COMPRESSORS', 'power_rating_range': [1, 2, 3]},
+            {'name': 'LD SERIES PISTON COMPRESSOR', 'power_rating_range': [5, 7, 10]},
+            {'name': 'HIGH PRESSURE PISTON COMPRESSORS', 'power_rating_range': [5, 10, 15, 20]},
+            {'name': 'CUSTOM BUILT COMPRESSORS', 'power_rating_range': [20, 50, 100, 150, 250]}
         ])
         industries = random.choice([
             'General Engineering', 'Automotive', 'Automobile', 'Textile', 'Food & Beverages', 'Paint Shot',
@@ -31,39 +57,29 @@ def categorize_product():
         ])
 
     if product['power_rating_range'] is not None:
-        power_rating = random.randint(product['power_rating_range'][0], product['power_rating_range'][1])
+        power_rating = random.choice(product['power_rating_range'])
+        pressure_rating = calculate_pressure(power_rating)
+        unit_price = calculate_unit_price(power_rating)
+        capacity = calculate_capacity(power_rating)
+        energy_consumption = calculate_energy_consumption(power_rating, capacity)
+        energy_efficiency = calculate_energy_efficiency(power_rating, capacity, energy_consumption)
     else:
         power_rating = None
-
-    if product['price_range'] is not None:
-        unit_price = random.randint(product['price_range'][0], product['price_range'][1])
-    else:
-        unit_price = None
-
-    if product['pressure_range'] is not None:
-        pressure_rating = random.randint(product['pressure_range'][0], product['pressure_range'][1])
-    else:
         pressure_rating = None
-
-    if product['capacity_range'] is not None:
-        capacity = random.randint(product['capacity_range'][0], product['capacity_range'][1])
-    else:
+        unit_price = None
         capacity = None
-
-    if product['consumption_range'] is not None:
-        energy_consumption = round(random.uniform(product['consumption_range'][0], product['consumption_range'][1]),1)
-    else:
         energy_consumption = None
+        energy_efficiency = None
 
-    return product_category, product['name'], industries, power_rating, unit_price, pressure_rating, capacity, energy_consumption
+    return product_category, product['name'], industries, power_rating, unit_price, pressure_rating, capacity, energy_consumption, energy_efficiency
 
 def generate_data():
     
     data = []
 
-    for i in range(1000):
+    for i in range(15000):
 
-        product_category, product_name, industries, power_rating, unit_price, pressure_rating, capacity, energy_consumption = categorize_product()
+        product_category, product_name, industries, power_rating, unit_price, pressure_rating, capacity, energy_consumption, energy_efficiency = categorize_product()
 
         product_id = i + 1000
         date_of_sale = fake.date_between(start_date='-1y', end_date='today')
@@ -80,7 +96,7 @@ def generate_data():
         service_contracts = random.choice(['Yes', 'No'])
         maintenance_history = fake.random_element(elements=('Regular maintenance every 6 months', 'Annual service contract', 'Quarterly Maintenance'))
         warranty_information = fake.random_element(elements=('1 year warranty', '2 years warranty', '3 years warranty', '5 years warranty'))
-        efficiency_rating = round(random.uniform(70, 95),2)
+        # efficiency_rating = round(random.uniform(70, 95),2)
         operating_cost = round(random.uniform(0.5* unit_price, 0.8 * unit_price),2)
         environmental_impact = fake.random_element(elements=('Low emissions', 'Environmentally friendly design', 'Minimal environmental impact'))
         market_trends = fake.random_element(elements=('Stable', 'Growing', 'Declining'))
@@ -95,14 +111,14 @@ def generate_data():
             date_of_sale, sales_channel, sales_region, unit_price, quantity_sold, total_sales_revenue, 
             customer_id, company_name, contact_person, contact_email, contact_phone,
             installation_date, service_contracts, maintenance_history, warranty_information,
-            energy_consumption, efficiency_rating, operating_cost, environmental_impact,
+            energy_consumption, energy_efficiency, operating_cost, environmental_impact,
             market_trends, customer_satisfaction_ratings, marketing_campaigns, promotional_discounts, advertising_channels,
             industry_regulations, industries
         ])
 
     return data
 
-def save_to_csv(data, filename='air_compressor_sales_data_with_nan.csv'):
+def save_to_csv(data, filename='air_compressor_sales_data.csv'):
     with open(filename, 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         header = [
@@ -110,7 +126,7 @@ def save_to_csv(data, filename='air_compressor_sales_data_with_nan.csv'):
             'Date_of_Sale', 'Sales_Channel', 'Sales_Region', 'Unit_Price', 'Quantity_Sold', 'Total_Sales_Revenue', 
             'Customer_ID', 'Company_Name', 'Contact_Person', 'Contact_Email', 'Contact_Phone',
             'Installation_Date', 'Service_Contracts', 'Maintenance_History', 'Warranty_Information',
-            'Energy_Consumption(kWh)', 'Efficiency_Rating(%)', 'Operating_Cost', 'Environmental_Impact',
+            'Energy_Consumption(kWh)', 'Energy_Efficiency', 'Operating_Cost', 'Environmental_Impact',
             'Market_Trends',  'Customer_Satisfaction_Ratings', 'Marketing_Campaigns', 'Promotional_Discounts', 'Advertising_Channels',
             'Industry_Regulations',  'industries'
         ]
