@@ -7,28 +7,24 @@ fake = Faker()
 
 def calculate_pressure(power_rating):
     base_pressure_rating = 80 + power_rating * 2
-    variability = random.uniform(-10, 10)  # Introduce variability between -5 and 5
+    variability = random.uniform(-10, 10)  
     return max(80, round(base_pressure_rating + variability), round(550 + variability))
 
 def calculate_unit_price(power_rating):
-    # Example: Higher power ratings lead to higher unit prices
-    return int(8000 + power_rating * 300)  # Adjust the formula as needed
+    return int(8000 + power_rating * 300) 
 
 def calculate_capacity(power_rating):
-    # Example: Higher power ratings lead to higher capacities, but with some variability
     base_capacity = 30 + power_rating * 5
-    variability = random.uniform(-50, 50)  # Introduce variability between -5 and 5
+    variability = random.uniform(-50, 50)  
     return max(10, round(base_capacity + variability), round(500 + variability))
 
 def calculate_energy_consumption(power_rating, capacity):
-    # Example: Energy consumption is influenced by power rating and capacity, but with some randomness
     base_consumption = 2.5 + power_rating * 0.1 + capacity * 0.02
-    randomness = random.uniform(-10, 10)  # Introduce randomness between -0.5 and 0.5
-    return round(max(1, base_consumption + randomness), 1)  # Ensure energy consumption is at least 1
+    randomness = random.uniform(-10, 10) 
+    return round(max(1, base_consumption + randomness), 1) 
 
 def calculate_energy_efficiency(power_rating, capacity, energy_consumption):
-    # Example: Introduce some randomness to the energy efficiency calculation
-    efficiency_variation = random.uniform(0.6, 1.5)  # Random multiplier between 0.8 and 1.2
+    efficiency_variation = random.uniform(0.6, 1.5)  
     return round((capacity / 100) / energy_consumption* efficiency_variation, 2)
 
 def categorize_product():
@@ -96,7 +92,6 @@ def generate_data():
         service_contracts = random.choice(['Yes', 'No'])
         maintenance_history = fake.random_element(elements=('Regular maintenance every 6 months', 'Annual service contract', 'Quarterly Maintenance'))
         warranty_information = fake.random_element(elements=('1 year warranty', '2 years warranty', '3 years warranty', '5 years warranty'))
-        # efficiency_rating = round(random.uniform(70, 95),2)
         operating_cost = round(random.uniform(0.5* unit_price, 0.8 * unit_price),2)
         environmental_impact = fake.random_element(elements=('Low emissions', 'Environmentally friendly design', 'Minimal environmental impact'))
         market_trends = fake.random_element(elements=('Stable', 'Growing', 'Declining'))
